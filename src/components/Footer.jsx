@@ -1,29 +1,78 @@
 export default function Footer() {
   return (
-    <footer className="bg-gray-50 py-8 mt-12 border-t">
-      <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-        <div>
-          <h3 className="font-semibold text-blue-700">Calidad Software</h3>
-          <p className="text-sm text-gray-600">
-            Plataforma educativa para evaluar y mejorar la calidad de software
-            mediante métricas cuantitativas basadas en estándares internacionales.
-          </p>
+    <footer className="bg-gray-50 py-10 mt-12 border-t">
+      <div className="container mx-auto px-6">
+        {/* Contenedor principal */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center md:text-left">
+          {/* Sección 1 */}
+          <div>
+            <h3 className="font-semibold text-blue-700 text-lg mb-2">
+              Calidad Software
+            </h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Plataforma educativa para evaluar y mejorar la calidad de software
+              mediante métricas cuantitativas basadas en estándares internacionales.
+            </p>
+          </div>
+
+          {/* Sección 2 */}
+          <div>
+            <h4 className="font-semibold text-gray-800 mb-2">Enlaces Rápidos</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>
+                <a href="/" className="hover:text-blue-600 transition-colors">
+                  Inicio
+                </a>
+              </li>
+              <li>
+                <a href="/conceptos" className="hover:text-blue-600 transition-colors">
+                  Conceptos
+                </a>
+              </li>
+              <li>
+                <a href="/beneficios" className="hover:text-blue-600 transition-colors">
+                  Beneficios
+                </a>
+              </li>
+              <li>
+                <a href="/evaluacion" className="hover:text-blue-600 transition-colors">
+                  Evaluación
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Sección 3 */}
+          <div>
+            <h4 className="font-semibold text-gray-800 mb-2">Recursos</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>
+                <a
+                  href="https://iso25000.com/index.php/en/iso-25000-standards/iso-25010"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-600 transition-colors"
+                >
+                  ISO/IEC 25010
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.w3.org/TR/WCAG21/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-600 transition-colors"
+                >
+                  WCAG 2.1
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div>
-          <h4 className="font-semibold">Enlaces Rápidos</h4>
-          <ul className="text-sm text-gray-600">
-            <li><a href="/">Inicio</a></li>
-            <li><a href="/conceptos">Conceptos</a></li>
-            <li><a href="/beneficios">Beneficios</a></li>
-            <li><a href="/evaluacion">Evaluación</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="font-semibold">Recursos</h4>
-          <ul className="text-sm text-gray-600">
-            <li>ISO/IEC 25010</li>
-            <li>WCAG 2.1</li>
-          </ul>
+
+        {/* Línea divisoria */}
+        <div className="border-t border-gray-200 mt-8 pt-4 text-center text-sm text-gray-500">
+          © {new Date().getFullYear()} Calidad Software. Todos los derechos reservados.
         </div>
       </div>
     </footer>

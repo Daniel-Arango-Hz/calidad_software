@@ -83,5 +83,5 @@ CREATE TABLE resultados_metricas (
 ##  Autor
 
 **Daniel Arango Hernández**  
-Proyecto educativo SENA — *Evaluación de Calidad de Software*  
+Proyecto educativo — *Evaluación de Calidad de Software*  
  2025

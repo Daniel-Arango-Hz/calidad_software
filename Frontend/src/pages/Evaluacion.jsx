@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Calculator, ArrowLeft, FileDown } from "lucide-react";
+import { Calculator, ArrowLeft, FileDown, CheckCircle, Shield, Lock, AlertTriangle, Info } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Chart } from "chart.js/auto";
-
 
 import {
   Bar,
@@ -33,6 +32,7 @@ const Evaluacion = () => {
 
   const [resultadosFinales, setResultadosFinales] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [activeTab, setActiveTab] = useState("general");
 
   const pdfRef = useRef();
 
@@ -314,169 +314,256 @@ const generarPDF = async (resultados) => {
   };
 
   return (
-    <div className="px-6 md:px-20 py-10 bg-gray-50 min-h-screen">
-      <h1 className="text-4xl font-extrabold text-center mb-4">
-        Herramienta de Evaluación
-      </h1>
-      <p className="text-center text-gray-600 mb-8">
-        Evalúa la calidad de tu aplicación educativa con métricas basadas en
-        ISO/IEC 25010.
-      </p>
+    <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen px-6 md:px-20 py-10">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center justify-center mb-8">
+          <div className="p-3 bg-blue-100 rounded-full mr-4">
+            <Calculator className="h-6 w-6 text-blue-700" />
+          </div>
+          <h1 className="text-4xl font-extrabold text-center">
+            Herramienta de Evaluación
+          </h1>
+        </div>
+        <p className="text-center text-gray-600 mb-8">
+          Evalúa la calidad de tu aplicación educativa con métricas basadas en
+          ISO/IEC 25010.
+        </p>
 
-      <div className="bg-white shadow-md p-6 rounded-2xl mb-12">
-        <h2 className="font-semibold text-lg mb-4">
-          Información de la Aplicación
-        </h2>
-        <input
-          type="text"
-          placeholder="Nombre de la aplicación"
-          value={nombreApp}
-          onChange={(e) => setNombreApp(e.target.value)}
-          className="w-full border rounded-lg p-2 mb-3"
-        />
-        <textarea
-          placeholder="Descripción..."
-          value={descripcionApp}
-          onChange={(e) => setDescripcionApp(e.target.value)}
-          className="w-full border rounded-lg p-2 mb-3"
-        ></textarea>
-        <input
-          type="text"
-          placeholder="Tipo de aplicación (por ejemplo: educativa, gestión, salud...)"
-          value={tipoApp}
-          onChange={(e) => setTipoApp(e.target.value)}
-          className="w-full border rounded-lg p-2"
-        />
-      </div>
+        <div className="bg-white shadow-lg p-8 rounded-2xl mb-12 border border-gray-100">
+          <h2 className="font-semibold text-xl mb-4 flex items-center">
+            <Info className="h-5 w-5 text-blue-600 mr-2" />
+            Información de la Aplicación
+          </h2>
+          <input
+            type="text"
+            placeholder="Nombre de la aplicación"
+            value={nombreApp}
+            onChange={(e) => setNombreApp(e.target.value)}
+            className="w-full border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+          />
+          <textarea
+            placeholder="Descripción..."
+            value={descripcionApp}
+            onChange={(e) => setDescripcionApp(e.target.value)}
+            className="w-full border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            rows="3"
+          ></textarea>
+          <select
+            value={tipoApp}
+            onChange={(e) => setTipoApp(e.target.value)}
+            className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+          >
+            <option value="">Seleccione el tipo de aplicación</option>
+            <option value="Educativa">Educativa</option>
+            <option value="Gestión">Gestión</option>
+            <option value="Salud">Salud</option>
+            <option value="Finanzas">Finanzas</option>
+            <option value="Comercio electrónico">Comercio electrónico</option>
+            <option value="Redes sociales">Redes sociales</option>
+            <option value="Productividad">Productividad</option>
+            <option value="Entretenimiento">Entretenimiento</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
 
-      {metricas.map((m) => (
-        <div
-          key={m.id}
-          className="bg-white shadow-sm p-6 rounded-2xl mb-6 border"
-        >
-          <div className="flex justify-between mb-3">
-            <div>
-              <h3 className="font-semibold text-lg">
-                {m.nombre}{" "}
-                <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
-                  {m.tipo || "General"}
-                </span>
-              </h3>
-              <p className="text-gray-500 text-sm">{m.descripcion}</p>
-              <p className="text-gray-500 text-sm mt-1">
+        <div className="flex mb-6 border-b">
+          <div className="py-3 px-6 font-medium text-lg text-blue-700 border-b-2 border-blue-700">
+            Métricas Generales
+          </div>
+        </div>
+
+        {metricas.map((m) => (
+          <div
+            key={m.id}
+            className="bg-gradient-to-r from-white to-blue-50 shadow-md p-6 rounded-xl mb-6 border-l-4 border-blue-500 border-t border-r border-b border-gray-200 hover:shadow-lg transition-all duration-300 hover:from-blue-50 hover:to-white"
+          >
+            <div className="mb-4">
+              <div className="flex justify-between items-center">
+                <h3 className="font-bold text-xl text-blue-800">
+                  {m.nombre}
+                  <span className="ml-2 text-xs text-white bg-blue-600 px-2 py-0.5 rounded-full shadow-sm">
+                    {m.tipo || "Funcional"}
+                  </span>
+                </h3>
+                <div className="bg-blue-600 text-white font-bold text-2xl px-3 py-1 rounded-lg shadow-sm">
+                  {puntuaciones[m.nombre]?.toFixed(1) || 0}
+                  <span className="text-blue-100 text-sm font-normal">/5</span>
+                </div>
+              </div>
+              <p className="text-gray-700 text-sm mt-2">{m.descripcion}</p>
+              <p className="text-blue-700 text-sm font-medium mt-2">
                 Peso en evaluación: {m.peso}%
               </p>
             </div>
-            <span className="text-blue-700 font-bold text-2xl">
-              {puntuaciones[m.nombre]?.toFixed(1) || 0}{" "}
-              <span className="text-gray-500 text-sm">/ 5</span>
-            </span>
+
+            <div className="relative h-3 bg-gray-200 rounded-full mb-6 mt-4 shadow-inner">
+              <input
+                type="range"
+                min="0"
+                max="5"
+                step="0.1"
+                value={puntuaciones[m.nombre] || 0}
+                onChange={(e) => handleChangePuntuacion(m.nombre, e.target.value)}
+                className="absolute w-full h-3 opacity-0 cursor-pointer z-10"
+              />
+              <div 
+                className="absolute left-0 top-0 h-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full" 
+                style={{ width: `${(puntuaciones[m.nombre] / 5) * 100}%` }}
+              ></div>
+              <div 
+                className="absolute -top-1.5 h-6 w-6 bg-white rounded-full border-2 border-blue-600 shadow-lg" 
+                style={{ left: `calc(${(puntuaciones[m.nombre] / 5) * 100}% - 12px)` }}
+              ></div>
+            </div>
+
+            <textarea
+              placeholder="Agrega observaciones sobre esta métrica..."
+              value={observaciones[m.nombre] || ""}
+              onChange={(e) => handleChangeObservacion(m.nombre, e.target.value)}
+              className="w-full border rounded-lg p-3 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              rows="2"
+            ></textarea>
           </div>
-
-          <input
-            type="range"
-            min="0"
-            max="5"
-            step="0.1"
-            value={puntuaciones[m.nombre] || 0}
-            onChange={(e) => handleChangePuntuacion(m.nombre, e.target.value)}
-            className="w-full accent-blue-700"
-          />
-
-          <textarea
-            placeholder="Agrega observaciones sobre esta métrica..."
-            value={observaciones[m.nombre] || ""}
-            onChange={(e) => handleChangeObservacion(m.nombre, e.target.value)}
-            className="w-full border rounded-lg p-2 mt-3"
-          ></textarea>
-        </div>
-      ))}
+        ))}
 
 
-      <div className="flex justify-between items-center mt-10">
-        <Link to="/beneficios">
-          <button className="flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100">
-            <ArrowLeft className="mr-2" /> Volver a Beneficios
-          </button>
-        </Link>
-        <button
-          onClick={guardarEvaluacion}
-          className="flex items-center px-6 py-3 bg-blue-700 text-white rounded-xl hover:bg-blue-800 transition"
-        >
-          <Calculator className="mr-2" /> Guardar Evaluación
-        </button>
-      </div>
-
-
-      {mostrarModal && resultadosFinales && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex justify-center items-center z-50">
-          <div
-            ref={pdfRef}
-            className="bg-white rounded-2xl shadow-xl p-8 w-[90%] max-w-3xl overflow-y-auto max-h-[90vh]"
+        <div className="flex justify-between items-center mt-10">
+          <Link to="/beneficios">
+            <button className="flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100 transition-all duration-300">
+              <ArrowLeft className="mr-2" /> Volver a Beneficios
+            </button>
+          </Link>
+          <button
+            onClick={guardarEvaluacion}
+            className="flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1"
           >
-            <h2 className="text-2xl font-bold mb-4 text-blue-700 text-center">
-              Resultados de la Evaluación ✅
-            </h2>
-            <p className="text-center text-gray-500 mb-4">
-              {new Date().toLocaleString()}
-            </p>
+            <Calculator className="mr-2" /> Guardar Evaluación
+          </button>
+        </div>
 
-            <div className="mb-4 text-center">
-              <p><strong>Promedio:</strong> {resultadosFinales.promedio}</p>
-              <p><strong>Porcentaje de calidad:</strong> {resultadosFinales.porcentaje_calidad}%</p>
-              <p><strong>Clasificación:</strong> {resultadosFinales.clasificacion}</p>
-            </div>
 
-            <div className="mb-6">
-              <Bar data={chartData} options={chartOptions} />
-            </div>
-
-            <div className="mt-6">
-              <h3 className="font-semibold text-lg mb-3">Observaciones</h3>
-              {metricas.map((m) => (
-                <div key={m.id} className="border rounded-lg p-3 mb-2">
-                  <p className="font-medium">
-                    {m.nombre}: {puntuaciones[m.nombre]} / 5
-                  </p>
-                  <p className="text-gray-600 text-sm">
-                    {observaciones[m.nombre] || "Sin observación"}
-                  </p>
+        {mostrarModal && resultadosFinales && (
+          <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex justify-center items-center z-50">
+            <div
+              ref={pdfRef}
+              className="bg-white rounded-2xl shadow-xl p-8 w-[90%] max-w-3xl overflow-y-auto max-h-[90vh]"
+            >
+              <div className="flex items-center mb-6">
+                <div className="p-3 bg-blue-100 rounded-full mr-4">
+                  <CheckCircle className="h-6 w-6 text-blue-700" />
                 </div>
-              ))}
-            </div>
+                <h2 className="text-2xl font-bold text-blue-700">
+                  Resultados de la Evaluación
+                </h2>
+              </div>
+              <p className="text-center text-gray-500 mb-4">
+                {new Date().toLocaleString()}
+              </p>
 
-            <div className="flex justify-end mt-6 space-x-3">
-              <button
-                onClick={() => generarPDF(resultadosFinales)}
-                className="flex items-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-              >
-                <FileDown className="mr-2" /> Descargar PDF
-              </button>
-              <button
-                onClick={() => {
-                  setMostrarModal(false);
-                  setResultadosFinales(null);
-                  setNombreApp("");
-                  setDescripcionApp("");
-                  setTipoApp("");
-              
-                  const inicialPuntuaciones = {};
-                  const inicialObservaciones = {};
-                  metricas.forEach((m) => {
-                    inicialPuntuaciones[m.nombre] = 0;
-                    inicialObservaciones[m.nombre] = "";
-                  });
-                  setPuntuaciones(inicialPuntuaciones);
-                  setObservaciones(inicialObservaciones);
-                }}
-                className="px-4 py-2 border rounded-lg hover:bg-gray-100"
-              >
-                Cerrar
-              </button>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl shadow-sm text-center">
+                  <p className="text-sm font-medium text-blue-800 mb-2">Promedio General</p>
+                  <p className="text-4xl font-bold text-blue-700 mb-1">
+                    {resultadosFinales.promedio.toFixed(2)}
+                  </p>
+                  <p className="text-xs text-blue-600">Escala 0-5</p>
+                </div>
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl shadow-sm text-center">
+                  <p className="text-sm font-medium text-green-800 mb-2">Porcentaje de Calidad</p>
+                  <p className="text-4xl font-bold text-green-700 mb-1">
+                    {resultadosFinales.porcentaje_calidad}%
+                  </p>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                    <div 
+                      className="bg-green-600 h-2.5 rounded-full" 
+                      style={{ width: `${resultadosFinales.porcentaje_calidad}%` }}
+                    ></div>
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl shadow-sm text-center">
+                  <p className="text-sm font-medium text-purple-800 mb-2">Clasificación</p>
+                  <p className="text-4xl font-bold text-purple-700 mb-1">
+                    {resultadosFinales.clasificacion}
+                  </p>
+                  <p className="text-xs text-purple-600">Nivel de calidad</p>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <Bar data={chartData} options={{
+                  ...chartOptions,
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
+                  },
+                  scales: { 
+                    y: { 
+                      beginAtZero: true, 
+                      max: 5,
+                      ticks: { stepSize: 1 }
+                    } 
+                  }
+                }} />
+              </div>
+
+              <div className="mt-6">
+                <h3 className="font-semibold text-lg mb-3 flex items-center">
+                  <Info className="h-5 w-5 text-blue-600 mr-2" />
+                  Observaciones
+                </h3>
+                <div className="space-y-4 max-h-64 overflow-y-auto p-2">
+                  {metricas.map((m) => (
+                    <div key={m.id} className="border-l-4 border-blue-500 pl-4 py-2">
+                      <div className="flex items-center mb-1">
+                        <p className="font-medium">
+                          {m.nombre}
+                        </p>
+                        <div className="ml-3 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                          {puntuaciones[m.nombre]} / 5
+                        </div>
+                      </div>
+                      <p className="text-gray-600 text-sm">
+                        {observaciones[m.nombre] || "Sin observación"}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex justify-end mt-6 space-x-3">
+                <button
+                  onClick={() => generarPDF(resultadosFinales)}
+                  className="flex items-center bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-md hover:shadow-lg"
+                >
+                  <FileDown className="mr-2" /> Descargar PDF
+                </button>
+                <button
+                  onClick={() => {
+                    setMostrarModal(false);
+                    setResultadosFinales(null);
+                    setNombreApp("");
+                    setDescripcionApp("");
+                    setTipoApp("");
+                
+                    const inicialPuntuaciones = {};
+                    const inicialObservaciones = {};
+                    metricas.forEach((m) => {
+                      inicialPuntuaciones[m.nombre] = 0;
+                      inicialObservaciones[m.nombre] = "";
+                    });
+                    setPuntuaciones(inicialPuntuaciones);
+                    setObservaciones(inicialObservaciones);
+                  }}
+                  className="px-6 py-3 border rounded-lg hover:bg-gray-100 transition-all duration-300"
+                >
+                  Cerrar
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

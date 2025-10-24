@@ -325,8 +325,8 @@ const generarPDF = async (resultados) => {
           </h1>
         </div>
         <p className="text-center text-gray-600 mb-8">
-          Evalúa la calidad de tu aplicación educativa con métricas basadas en
-          ISO/IEC 25010.
+          Evalúa la calidad de tu aplicación educativa usando métricas basadas en
+          las normas que se describen en la sección de Beneficios: <strong>ISO 9001</strong>, <strong>ISO 27001</strong>, <strong>ISO 27010</strong> y <strong>ISO/IEC 25010</strong> (familia ISO 25000).
         </p>
 
         <div className="bg-white shadow-lg p-8 rounded-2xl mb-12 border border-gray-100">

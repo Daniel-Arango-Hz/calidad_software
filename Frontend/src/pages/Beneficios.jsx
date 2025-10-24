@@ -17,7 +17,7 @@ export default function Beneficios() {
         <div className="bg-white p-8 rounded-2xl shadow-lg mb-16">
           <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">Beneficios de Implementar Normas ISO en el Desarrollo de Software</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 hover:shadow-md transition-all duration-300">
               <div className="flex items-center mb-4">
                 <div className="p-3 bg-blue-200 rounded-full mr-4">
@@ -83,6 +83,29 @@ export default function Beneficios() {
                 <li className="flex items-start">
                   <span className="text-purple-600 mr-2 mt-1">•</span>
                   <span className="text-gray-700">Intercambio de información protegido</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="p-6 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl border border-indigo-200 hover:shadow-md transition-all duration-300">
+              <div className="flex items-center mb-4">
+                <div className="p-3 bg-indigo-200 rounded-full mr-4">
+                  <Code className="h-6 w-6 text-indigo-700" />
+                </div>
+                <h3 className="font-bold text-lg text-indigo-800">ISO 25000</h3>
+              </div>
+              <ul className="space-y-3">
+                <li className="flex items-start">
+                  <span className="text-indigo-600 mr-2 mt-1">•</span>
+                  <span className="text-gray-700">Mejora la calidad del producto de software</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-indigo-600 mr-2 mt-1">•</span>
+                  <span className="text-gray-700">Define criterios de calidad medibles</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-indigo-600 mr-2 mt-1">•</span>
+                  <span className="text-gray-700">Permite evaluaciones objetivas del producto</span>
                 </li>
               </ul>
             </div>

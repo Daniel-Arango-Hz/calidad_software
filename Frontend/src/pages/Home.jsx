@@ -66,7 +66,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
               <div className="flex items-center mb-4">
                 <div className="p-3 bg-blue-200 rounded-full mr-4">
@@ -108,6 +108,21 @@ export default function Home() {
                 Proporciona directrices para la gestión de la seguridad de la información en comunicaciones intersectoriales.
               </p>
               <a href="/conceptos" className="text-purple-700 font-medium hover:underline flex items-center">
+                Aprender más <span className="ml-1">→</span>
+              </a>
+            </div>
+            
+            <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+              <div className="flex items-center mb-4">
+                <div className="p-3 bg-amber-200 rounded-full mr-4">
+                  <BarChart3 className="h-6 w-6 text-amber-700" />
+                </div>
+                <h3 className="text-xl font-bold text-amber-800">ISO 25000</h3>
+              </div>
+              <p className="text-gray-700 mb-4">
+                Proporciona un marco para la evaluación de la calidad del producto software y establece criterios para su especificación y medición.
+              </p>
+              <a href="/conceptos" className="text-amber-700 font-medium hover:underline flex items-center">
                 Aprender más <span className="ml-1">→</span>
               </a>
             </div>

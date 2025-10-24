@@ -1,4 +1,4 @@
-import { Shield, CheckCircle, FileCheck, Lock } from "lucide-react";
+import { Shield, CheckCircle, FileCheck, Lock, BarChart3 } from "lucide-react";
 
 export default function Conceptos() {
   return (
@@ -14,7 +14,7 @@ export default function Conceptos() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           <div className="p-8 bg-white shadow-lg rounded-xl border-t-4 border-blue-600 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
             <div className="inline-flex items-center justify-center p-3 bg-blue-100 rounded-full mb-4">
               <CheckCircle className="h-8 w-8 text-blue-600" />
@@ -83,6 +83,30 @@ export default function Conceptos() {
               <li className="flex items-start">
                 <span className="text-purple-600 mr-2">•</span>
                 <span>Comunicación entre organizaciones</span>
+              </li>
+            </ul>
+          </div>
+          
+          <div className="p-8 bg-white shadow-lg rounded-xl border-t-4 border-amber-600 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div className="inline-flex items-center justify-center p-3 bg-amber-100 rounded-full mb-4">
+              <BarChart3 className="h-8 w-8 text-amber-600" />
+            </div>
+            <h3 className="text-xl font-bold mb-3 text-gray-800">ISO 25000</h3>
+            <p className="text-gray-600 mb-4">
+              Proporciona un marco para la evaluación de la calidad del producto software y establece criterios para su especificación y medición.
+            </p>
+            <ul className="space-y-2 text-gray-600">
+              <li className="flex items-start">
+                <span className="text-amber-600 mr-2">•</span>
+                <span>Modelos de calidad del producto</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-amber-600 mr-2">•</span>
+                <span>Métricas de evaluación</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-amber-600 mr-2">•</span>
+                <span>Requisitos de calidad del software</span>
               </li>
             </ul>
           </div>

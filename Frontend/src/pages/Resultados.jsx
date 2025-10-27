@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { ChartBar } from "lucide-react";
 
-export default function Ejemplo() {
+export default function Resultados() {
   const [proyectos, setProyectos] = useState([]);
   const [seleccionado, setSeleccionado] = useState("");
   const [detalles, setDetalles] = useState(null);
@@ -73,14 +73,14 @@ export default function Ejemplo() {
 
       <div className="text-center mb-12">
         <span className="inline-block px-5 py-2 bg-blue-600 text-white rounded-full text-sm font-semibold mb-4 shadow-md transform hover:scale-105 transition-transform">
-          Ejemplo Práctico
+          Resultados
         </span>
         <h2 className="text-5xl font-extrabold text-gray-800 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-500">
-          Evaluación de Aplicativo Educativo
+          Evaluación de Aplicativos Educativos
         </h2>
         <p className="text-gray-700 max-w-2xl mx-auto text-lg leading-relaxed">
           Selecciona un proyecto para visualizar sus resultados de evaluación de
-          calidad, calculados según las métricas ISO/IEC 25010.
+          calidad, calculados según las métricas ISO/IEC.
         </p>
       </div>
 
@@ -231,10 +231,47 @@ export default function Ejemplo() {
               </span>
               .
             </p>
-            <p className="text-gray-700">
+            <p className="text-gray-700 mb-4">
               Este análisis cuantitativo permite identificar fortalezas y áreas
               de mejora dentro del desarrollo del software educativo.
             </p>
+            
+            <div className="overflow-x-auto">
+              <h5 className="text-lg font-semibold text-gray-800 mb-3">
+                Tabla de Clasificación y Recomendaciones
+              </h5>
+              <table className="min-w-full bg-white rounded-lg overflow-hidden border border-blue-200">
+                <thead className="bg-blue-600 text-white">
+                  <tr>
+                    <th className="px-4 py-3 text-left">Clasificación</th>
+                    <th className="px-4 py-3 text-left">Porcentaje(%)</th>
+                    <th className="px-4 py-3 text-left">Recomendación técnica y estratégica</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="hover:bg-blue-50">
+                    <td className="px-4 py-3 font-semibold text-green-700">Excelente</td>
+                    <td className="px-4 py-3">&gt; 85%</td>
+                    <td className="px-4 py-3">Mantener prácticas actuales. Documentar procesos exitosos. Compartir como referencia para otros equipos.</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50">
+                    <td className="px-4 py-3 font-semibold text-blue-700">Bueno</td>
+                    <td className="px-4 py-3">60% – 85%</td>
+                    <td className="px-4 py-3">Revisar métricas con puntuación baja. Aplicar mejoras incrementales. Priorizar refactorización o pruebas adicionales.</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50">
+                    <td className="px-4 py-3 font-semibold text-yellow-600">Aceptable</td>
+                    <td className="px-4 py-3">50% – 60%</td>
+                    <td className="px-4 py-3">Realizar revisión técnica completa. Identificar cuellos de botella. Considerar rediseño parcial o capacitación.</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50">
+                    <td className="px-4 py-3 font-semibold text-red-600">Deficiente / Crítico</td>
+                    <td className="px-4 py-3">≤ 50%</td>
+                    <td className="px-4 py-3">Activar plan de mejora urgente. Reunir equipo técnico para análisis profundo. Redefinir arquitectura o procesos clave.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </>
       )}

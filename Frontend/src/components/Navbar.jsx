@@ -41,8 +41,8 @@ export default function Navbar() {
           <Link to="/evaluacion" className={linkClass("/evaluacion")}>
             Evaluación
           </Link>
-          <Link to="/ejemplo" className={linkClass("/ejemplo")}>
-            Ejemplo
+          <Link to="/Resultados" className={linkClass("/Resultados")}>
+            Resultados
           </Link>
           <Link
             to="/evaluacion"

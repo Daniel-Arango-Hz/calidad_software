@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import Conceptos from "./pages/Conceptos";
 import Beneficios from "./pages/Beneficios";
 import Evaluacion from "./pages/Evaluacion";
-import Ejemplo from "./pages/Ejemplo";
+import Resultados from "./pages/Resultados";
 
 export default function App() {
   return (
@@ -18,7 +18,7 @@ export default function App() {
             <Route path="/conceptos" element={<Conceptos />} />
             <Route path="/beneficios" element={<Beneficios />} />
             <Route path="/evaluacion" element={<Evaluacion />} />
-            <Route path="/ejemplo" element={<Ejemplo />} />
+            <Route path="/Resultados" element={<Resultados />} />
           </Routes>
         </main>
         <Footer />

@@ -758,21 +758,21 @@ const generarPDF = async (resultados) => {
                 </button>
                 <button
                   onClick={() => {
-                    // Limpiar modal y resultados
+                 
                     setMostrarModal(false);
                     setResultadosFinales(null);
                     
-                    // Limpiar información de la aplicación
+               
                     setNombreApp("");
                     setDescripcionApp("");
                     setTipoApp("");
                     
-                    // Limpiar URL y resultados de PageSpeed
+               
                     setUrl("");
                     setPerformanceMetrics(null);
                     setApiError(null);
                 
-                    // Reiniciar puntuaciones y observaciones
+               
                     const inicialPuntuaciones = {};
                     const inicialObservaciones = {};
                     metricas.forEach((m) => {

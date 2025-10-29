@@ -37,6 +37,7 @@ const Evaluacion = () => {
   const [performanceMetrics, setPerformanceMetrics] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [apiError, setApiError] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const pdfRef = useRef();
 
@@ -345,6 +346,7 @@ const generarPDF = async (resultados) => {
     }
 
     setIsAnalyzing(true);
+    setIsSaving(true);
     let metricsResult = null;
 
     if (url) {
@@ -406,6 +408,7 @@ const generarPDF = async (resultados) => {
       alert("Error al guardar los datos en Supabase.");
     } finally {
       setIsAnalyzing(false);
+      setIsSaving(false);
     }
   };
 
@@ -439,7 +442,19 @@ const generarPDF = async (resultados) => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen px-6 md:px-20 py-10">
+    <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen px-6 md:px-20 py-10 relative">
+      {/* Loading Overlay */}
+      {(isSaving || isAnalyzing) && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-2xl shadow-xl flex flex-col items-center">
+            <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-lg font-semibold text-gray-700">
+              {isAnalyzing ? "Analizando rendimiento web..." : "Guardando evaluación..."}
+            </p>
+            <p className="text-sm text-gray-500 mt-2">Por favor, espere un momento</p>
+          </div>
+        </div>
+      )}
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-center mb-8">
           <div className="p-3 bg-blue-100 rounded-full mr-4">
@@ -743,12 +758,21 @@ const generarPDF = async (resultados) => {
                 </button>
                 <button
                   onClick={() => {
+                    // Limpiar modal y resultados
                     setMostrarModal(false);
                     setResultadosFinales(null);
+                    
+                    // Limpiar información de la aplicación
                     setNombreApp("");
                     setDescripcionApp("");
                     setTipoApp("");
+                    
+                    // Limpiar URL y resultados de PageSpeed
+                    setUrl("");
+                    setPerformanceMetrics(null);
+                    setApiError(null);
                 
+                    // Reiniciar puntuaciones y observaciones
                     const inicialPuntuaciones = {};
                     const inicialObservaciones = {};
                     metricas.forEach((m) => {

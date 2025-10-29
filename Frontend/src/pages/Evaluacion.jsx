@@ -33,8 +33,15 @@ const Evaluacion = () => {
   const [resultadosFinales, setResultadosFinales] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [activeTab, setActiveTab] = useState("general");
+  const [url, setUrl] = useState("");
+  const [performanceMetrics, setPerformanceMetrics] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [apiError, setApiError] = useState(null);
 
   const pdfRef = useRef();
+  
+  // TODO: Mover a variables de entorno
+  const PAGESPEED_API_KEY = "AIzaSyBhhHP7wiVKFIv1eKoE3hLisI2t-Bzd2u0";
 
 
   useEffect(() => {
@@ -57,6 +64,39 @@ const Evaluacion = () => {
     fetchMetricas();
   }, []);
 
+
+  const evaluarURL = async () => {
+    if (!url) {
+      setApiError("Por favor, ingrese una URL para evaluar");
+      return;
+    }
+
+    if (!PAGESPEED_API_KEY) {
+      setApiError("Se requiere una API key de Google PageSpeed Insights. Por favor, configure la API key.");
+      return;
+    }
+
+    setIsAnalyzing(true);
+    setApiError(null);
+    
+    try {
+      const response = await fetch(
+        `https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${PAGESPEED_API_KEY}`
+      );
+      const data = await response.json();
+      
+      if (data.error) {
+        setApiError(data.error.message);
+        return;
+      }
+
+      setPerformanceMetrics(data.lighthouseResult);
+    } catch (error) {
+      setApiError(error.message);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   const calcularResultados = () => {
     const totalPeso = metricas.reduce((acc, m) => acc + (m.peso || 1), 0);
@@ -366,9 +406,73 @@ const generarPDF = async (resultados) => {
           </select>
         </div>
 
-        <div className="flex mb-6 border-b">
-          <div className="py-3 px-6 font-medium text-lg text-blue-700 border-b-2 border-blue-700">
-            Métricas Generales
+        <div className="bg-white shadow-md p-6 rounded-xl mb-8 border border-gray-200">
+            <h3 className="text-xl font-bold text-blue-800 mb-4">Evaluación de Rendimiento Web</h3>
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-4">
+                <input
+                  type="url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="Ingrese la URL del sitio web a evaluar"
+                  className="flex-1 border rounded-lg p-3 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <button
+                  onClick={evaluarURL}
+                  disabled={isAnalyzing || !PAGESPEED_API_KEY}
+                  className={`px-6 py-2 rounded-lg text-white ${
+                    isAnalyzing || !PAGESPEED_API_KEY
+                      ? 'bg-gray-400'
+                      : 'bg-blue-600 hover:bg-blue-700'
+                  } transition-colors`}
+                >
+                  {isAnalyzing ? 'Analizando...' : 'Evaluar'}
+                </button>
+              </div>
+              
+              {apiError && (
+                <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                  <div className="flex">
+                    <AlertTriangle className="h-5 w-5 text-red-500 mr-2" />
+                    <p className="text-sm text-red-700">{apiError}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {performanceMetrics && (
+              <div className="mt-4">
+                <button
+                  onClick={() => setMostrarModal(true)}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors"
+                >
+                  Ver Reporte Detallado
+                </button>
+                
+                <div className="p-4 bg-blue-50 rounded-lg mt-4">
+                  <h4 className="font-bold text-blue-800 mb-2">Resultados Principales:</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Rendimiento:</p>
+                      <p className="font-bold text-blue-700">
+                        {Math.round(performanceMetrics.categories.performance.score * 100)}%
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">First Contentful Paint:</p>
+                      <p className="font-bold text-blue-700">
+                        {performanceMetrics.audits['first-contentful-paint'].displayValue}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="flex mb-6 border-b">
+            <div className="py-3 px-6 font-medium text-lg text-blue-700 border-b-2 border-blue-700">
+              Métricas Generales
           </div>
         </div>
 
@@ -441,6 +545,364 @@ const generarPDF = async (resultados) => {
           </button>
         </div>
 
+
+        {mostrarModal && performanceMetrics && (
+          <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex justify-center items-center z-50">
+            <div className="bg-white rounded-2xl shadow-xl p-8 w-[90%] max-w-4xl overflow-y-auto max-h-[90vh]">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center">
+                  <div className="p-3 bg-blue-100 rounded-full mr-4">
+                    <CheckCircle className="h-6 w-6 text-blue-700" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-blue-700">
+                    Análisis de Rendimiento Web
+                  </h2>
+                </div>
+                <button
+                  onClick={() => setMostrarModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl shadow-sm">
+                  <h3 className="font-semibold text-blue-800 mb-2">Puntuación General</h3>
+                  <p className="text-4xl font-bold text-blue-700">
+                    {Math.round(performanceMetrics.categories.performance.score * 100)}%
+                  </p>
+                </div>
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl shadow-sm">
+                  <h3 className="font-semibold text-green-800 mb-2">Experiencia del Usuario</h3>
+                  <p className="text-4xl font-bold text-green-700">
+                    {Math.round((
+                      performanceMetrics.categories.performance.score * 0.5 +
+                      (performanceMetrics.categories['best-practices']?.score || 0) * 0.5
+                    ) * 100)}%
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                {/* Eficiencia del Rendimiento */}
+                <div className="border rounded-lg p-6">
+                  <h3 className="text-lg font-semibold mb-4 text-blue-800">
+                    Eficiencia del Rendimiento
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="border-l-4 border-blue-500 pl-4 py-2">
+                      <p className="text-sm font-semibold text-gray-700">Tiempo de Carga Inicial</p>
+                      <p className="font-bold text-blue-700">
+                        {performanceMetrics.audits['first-contentful-paint'].displayValue}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Tiempo que tarda en mostrarse el primer contenido</p>
+                    </div>
+                    <div className="border-l-4 border-blue-500 pl-4 py-2">
+                      <p className="text-sm font-semibold text-gray-700">Tiempo de Carga Total</p>
+                      <p className="font-bold text-blue-700">
+                        {performanceMetrics.audits['interactive'].displayValue}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Tiempo hasta que la página es completamente interactiva</p>
+                    </div>
+                    <div className="border-l-4 border-blue-500 pl-4 py-2">
+                      <p className="text-sm font-semibold text-gray-700">Velocidad de Carga</p>
+                      <p className="font-bold text-blue-700">
+                        {performanceMetrics.audits['speed-index'].displayValue}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Qué tan rápido se muestra el contenido visualmente</p>
+                    </div>
+                    <div className="border-l-4 border-blue-500 pl-4 py-2">
+                      <p className="text-sm font-semibold text-gray-700">Tiempo de Bloqueo Total</p>
+                      <p className="font-bold text-blue-700">
+                        {performanceMetrics.audits['total-blocking-time'].displayValue}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Tiempo en que la página está bloqueada para interacciones</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Usabilidad */}
+                <div className="border rounded-lg p-6">
+                  <h3 className="text-lg font-semibold mb-4 text-green-800">
+                    Usabilidad y Experiencia del Usuario
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="border-l-4 border-green-500 pl-4 py-2">
+                      <p className="text-sm font-semibold text-gray-700">Estabilidad Visual</p>
+                      <p className="font-bold text-green-700">
+                        {performanceMetrics.audits['cumulative-layout-shift'].displayValue}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Medida de cuánto se mueven los elementos visualmente durante la carga</p>
+                    </div>
+                    <div className="border-l-4 border-green-500 pl-4 py-2">
+                      <p className="text-sm font-semibold text-gray-700">Mayor Elemento Visible</p>
+                      <p className="font-bold text-green-700">
+                        {performanceMetrics.audits['largest-contentful-paint'].displayValue}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Tiempo en que se carga el elemento visual más grande</p>
+                    </div>
+                    {performanceMetrics.audits['max-potential-fid'] && (
+                      <div className="border-l-4 border-green-500 pl-4 py-2">
+                        <p className="text-sm font-semibold text-gray-700">Retraso en Interactividad</p>
+                        <p className="font-bold text-green-700">
+                          {performanceMetrics.audits['max-potential-fid'].displayValue}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">Tiempo máximo que podría tardar la página en responder a interacciones</p>
+                      </div>
+                    )}
+                    <div className="border-l-4 border-green-500 pl-4 py-2">
+                      <p className="text-sm font-semibold text-gray-700">Optimización de Imágenes</p>
+                      <p className="font-bold text-green-700">
+                        {performanceMetrics.audits['uses-optimized-images']?.score
+                          ? `${Math.round(performanceMetrics.audits['uses-optimized-images'].score * 100)}%`
+                          : 'N/A'}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Eficiencia en el uso y carga de imágenes</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* SEO */}
+                <div className="border rounded-lg p-6">
+                  <h3 className="text-lg font-semibold mb-4 text-indigo-800 flex items-center justify-between">
+                    <span>SEO (Optimización para Motores de Búsqueda)</span>
+                    <span className="text-sm font-normal text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
+                      {Math.round((performanceMetrics.categories.seo?.score || 0) * 100)}%
+                    </span>
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.values(performanceMetrics.audits)
+                      .filter(audit => audit.id.startsWith('seo-'))
+                      .map(audit => (
+                        <div key={audit.id} className="border-l-4 border-indigo-500 pl-4 py-2">
+                          <div className="flex justify-between items-start">
+                            <p className="text-sm font-semibold text-gray-700">
+                              {audit.title.replace('SEO content:', '').replace('SEO:', '')}
+                            </p>
+                            <div className={`px-2 py-1 rounded text-xs font-medium ${
+                              audit.score >= 0.9 ? 'bg-green-100 text-green-800' :
+                              audit.score >= 0.5 ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-red-100 text-red-800'
+                            }`}>
+                              {audit.score === null ? 'N/A' : `${Math.round(audit.score * 100)}%`}
+                            </div>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">{audit.description}</p>
+                        </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Accesibilidad */}
+                <div className="border rounded-lg p-6">
+                  <h3 className="text-lg font-semibold mb-4 text-purple-800 flex items-center justify-between">
+                    <span>Accesibilidad</span>
+                    <span className="text-sm font-normal text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
+                      {Math.round((performanceMetrics.categories.accessibility?.score || 0) * 100)}%
+                    </span>
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.values(performanceMetrics.audits)
+                      .filter(audit => audit.id.startsWith('accessibility-'))
+                      .map(audit => (
+                        <div key={audit.id} className="border-l-4 border-purple-500 pl-4 py-2">
+                          <div className="flex justify-between items-start">
+                            <p className="text-sm font-semibold text-gray-700">
+                              {audit.title.replace('Accessibility:', '')}
+                            </p>
+                            <div className={`px-2 py-1 rounded text-xs font-medium ${
+                              audit.score >= 0.9 ? 'bg-green-100 text-green-800' :
+                              audit.score >= 0.5 ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-red-100 text-red-800'
+                            }`}>
+                              {audit.score === null ? 'N/A' : `${Math.round(audit.score * 100)}%`}
+                            </div>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">{audit.description}</p>
+                        </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Mejores Prácticas */}
+                <div className="border rounded-lg p-6">
+                  <h3 className="text-lg font-semibold mb-4 text-orange-800 flex items-center justify-between">
+                    <span>Mejores Prácticas</span>
+                    <span className="text-sm font-normal text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
+                      {Math.round((performanceMetrics.categories['best-practices']?.score || 0) * 100)}%
+                    </span>
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.values(performanceMetrics.audits)
+                      .filter(audit => (
+                        audit.id.startsWith('best-practices-') ||
+                        (performanceMetrics.categories['best-practices']?.auditRefs || [])
+                          .some(ref => ref.id === audit.id)
+                      ))
+                      .map(audit => (
+                        <div key={audit.id} className="border-l-4 border-orange-500 pl-4 py-2">
+                          <div className="flex justify-between items-start">
+                            <p className="text-sm font-semibold text-gray-700">
+                              {audit.title.replace('Best Practices:', '')}
+                            </p>
+                            <div className={`px-2 py-1 rounded text-xs font-medium ${
+                              audit.score >= 0.9 ? 'bg-green-100 text-green-800' :
+                              audit.score >= 0.5 ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-red-100 text-red-800'
+                            }`}>
+                              {audit.score === null ? 'N/A' : `${Math.round(audit.score * 100)}%`}
+                            </div>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">{audit.description}</p>
+                        </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Métricas SEO, Accesibilidad y Mejores Prácticas (si están presentes) */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* SEO */}
+                  <div className="border rounded-lg p-6">
+                    <h3 className="text-lg font-semibold mb-4">SEO</h3>
+                    {(() => {
+                      const audits = Object.values(performanceMetrics.audits || {}).filter(audit =>
+                        audit.id?.startsWith?.('seo-') || (performanceMetrics.categories?.seo?.auditRefs || []).some(ref => ref.id === audit.id)
+                      );
+                      if (!audits.length) {
+                        return (
+                          <p className="text-sm text-gray-600">No hay datos de SEO en este reporte. Es posible que la petición se haya limitado a la categoría "performance". Para obtener SEO, vuelve a ejecutar la API solicitando las categorías correspondientes.</p>
+                        );
+                      }
+                      return (
+                        <div className="grid grid-cols-1 gap-4">
+                          {audits.map(audit => (
+                            <div key={audit.id} className="border-l-4 border-indigo-500 pl-4 py-2">
+                              <div className="flex justify-between items-start">
+                                <p className="text-sm font-semibold text-gray-700">{audit.title}</p>
+                                <div className={`px-2 py-1 rounded text-xs font-medium ${
+                                  audit.score >= 0.9 ? 'bg-green-100 text-green-800' :
+                                  audit.score >= 0.5 ? 'bg-yellow-100 text-yellow-800' :
+                                  'bg-red-100 text-red-800'
+                                }`}>
+                                  {audit.score === null ? 'N/A' : `${Math.round(audit.score * 100)}%`}
+                                </div>
+                              </div>
+                              <p className="text-xs text-gray-500 mt-1">{audit.description}</p>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Accesibilidad */}
+                  <div className="border rounded-lg p-6">
+                    <h3 className="text-lg font-semibold mb-4">Accesibilidad</h3>
+                    {(() => {
+                      const audits = Object.values(performanceMetrics.audits || {}).filter(audit =>
+                        audit.id?.startsWith?.('accessibility-') || (performanceMetrics.categories?.accessibility?.auditRefs || []).some(ref => ref.id === audit.id)
+                      ).sort((a,b) => (b.score || 0) - (a.score || 0));
+                      if (!audits.length) {
+                        return (
+                          <p className="text-sm text-gray-600">No hay datos de accesibilidad en este reporte. Es posible que la petición se haya limitado a la categoría "performance".</p>
+                        );
+                      }
+                      return (
+                        <div className="grid grid-cols-1 gap-4">
+                          {audits.map(audit => (
+                            <div key={audit.id} className="border-l-4 border-purple-500 pl-4 py-2">
+                              <div className="flex justify-between items-start">
+                                <p className="text-sm font-semibold text-gray-700">{audit.title}</p>
+                                <div className={`px-2 py-1 rounded text-xs font-medium ${
+                                  audit.score >= 0.9 ? 'bg-green-100 text-green-800' :
+                                  audit.score >= 0.5 ? 'bg-yellow-100 text-yellow-800' :
+                                  'bg-red-100 text-red-800'
+                                }`}>
+                                  {audit.score === null ? 'N/A' : `${Math.round(audit.score * 100)}%`}
+                                </div>
+                              </div>
+                              <p className="text-xs text-gray-500 mt-1">{audit.description}</p>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Mejores Prácticas */}
+                  <div className="border rounded-lg p-6">
+                    <h3 className="text-lg font-semibold mb-4">Mejores Prácticas</h3>
+                    {(() => {
+                      const categoryRefs = (performanceMetrics.categories?.['best-practices']?.auditRefs || []).map(r => r.id);
+                      const audits = Object.values(performanceMetrics.audits || {}).filter(audit =>
+                        audit.id?.startsWith?.('best-practices-') || categoryRefs.includes(audit.id)
+                      ).sort((a,b) => (b.score || 0) - (a.score || 0));
+                      if (!audits.length) {
+                        return (
+                          <p className="text-sm text-gray-600">No hay datos de "Mejores Prácticas" en este reporte. Es posible que la petición se haya limitado a la categoría "performance".</p>
+                        );
+                      }
+                      return (
+                        <div className="grid grid-cols-1 gap-4">
+                          {audits.map(audit => (
+                            <div key={audit.id} className="border-l-4 border-orange-500 pl-4 py-2">
+                              <div className="flex justify-between items-start">
+                                <p className="text-sm font-semibold text-gray-700">{audit.title}</p>
+                                <div className={`px-2 py-1 rounded text-xs font-medium ${
+                                  audit.score >= 0.9 ? 'bg-green-100 text-green-800' :
+                                  audit.score >= 0.5 ? 'bg-yellow-100 text-yellow-800' :
+                                  'bg-red-100 text-red-800'
+                                }`}>
+                                  {audit.score === null ? 'N/A' : `${Math.round(audit.score * 100)}%`}
+                                </div>
+                              </div>
+                              <p className="text-xs text-gray-500 mt-1">{audit.description}</p>
+                              {audit.warnings && audit.warnings.length > 0 && (
+                                <ul className="mt-1 text-xs text-yellow-600">
+                                  {audit.warnings.map((w,i) => <li key={i}>⚠️ {w}</li>)}
+                                </ul>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </div>
+
+                {/* Oportunidades de Mejora */}
+                <div className="border rounded-lg p-6">
+                  <h3 className="text-lg font-semibold mb-4">Oportunidades de Mejora</h3>
+                  <div className="space-y-4">
+                    {Object.values(performanceMetrics.audits)
+                      .filter(audit => audit.details?.type === 'opportunity' && audit.score !== null && audit.score < 1)
+                      .map(audit => (
+                        <div key={audit.id} className="border-l-4 border-yellow-500 pl-4 py-2">
+                          <div className="flex justify-between items-center">
+                            <p className="font-medium">{audit.title}</p>
+                            <span className="text-sm text-yellow-600">
+                              Impacto: {audit.details?.overallSavingsMs ? `${Math.round(audit.details.overallSavingsMs)}ms` : 'Variable'}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1">{audit.description}</p>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end mt-6">
+                <button
+                  onClick={() => setMostrarModal(false)}
+                  className="px-6 py-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {mostrarModal && resultadosFinales && (
           <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex justify-center items-center z-50">

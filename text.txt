@@ -1,0 +1,413 @@
+Recomendaciones y datos completos
+Mostrar JSON completo
+Reducir JavaScript no utilizado
+
+0%
+Ahorro estimado de 241 KiB
+
+Reduce el JavaScript no utilizado y pospone la carga de scripts hasta que sean necesarios para disminuir los bytes consumidos por la actividad de red. [Aprende cómo reducir el JavaScript no utilizado](https://developer.chrome.com/docs/lighthouse/performance/unused-javascript/).
+
+{
+  "ordenadoPor": [
+    "bytes desperdiciados"
+  ],
+  "tipo": "oportunidad",
+  "Ahorro total en millones": 180,
+  "datos de depuración": {
+    "Ahorros métricos": {
+      "FCP": 200,
+      "LCP": 180
+    },
+    "tipo": "datos de depuración"
+  },
+  "encabezados": [
+    {
+      "valueType": "url",
+      "etiqueta": "URL",
+      "clave": "url",
+      "subItemsHeading": {
+        "valueType": "code",
+        "clave": "fuente"
+      }
+    },
+    {
+      "valueType": "bytes",
+      "etiqueta": "Tamaño de transferencia",
+      "subItemsHeading": {
+        "clave": "bytes de origen"
+      },
+      "clave": "totalBytes"
+    },
+    {
+      "valueType": "bytes",
+      "subItemsHeading": {
+        "clave": "fuenteWastedBytes"
+      },
+      "etiqueta": "East Savings",
+      "clave": "bytes desperdiciados"
+    }
+  ],
+  "elementos": [
+    {
+      "url": "https://calidad-software-wine.vercel.app/assets/index-C_fcXm-m.js",
+      "porcentaje desperdiciado": 76,66622505507877,
+      "bytes desperdiciados": 246717,
+      "totalBytes": 321807
+    }
+  ],
+  "Ahorro total en bytes": 246717
+}
+Minificar CSS
+
+100%
+La minimización de archivos CSS puede reducir el tamaño de la carga útil de la red. [Aprenda cómo minimizar CSS](https://developer.chrome.com/docs/lighthouse/performance/unminified-css/).
+
+{
+  "encabezados": [],
+  "tipo": "oportunidad",
+  "ahorro total en millones": 0,
+  "datos de depuración": {
+    "tipo": "datos de depuración",
+    "Ahorros métricos": {
+      "FCP": 0,
+      "LCP": 0
+    }
+  },
+  "elementos": [],
+  "bytes de ahorro total": 0,
+  "ordenadoPor": [
+    "bytes desperdiciados"
+  ]
+}
+El tiempo de respuesta inicial del servidor fue corto
+
+100%
+El documento raíz tardó 0 ms
+
+Mantén el tiempo de respuesta del servidor para el documento principal corto, ya que todas las demás solicitudes dependen de él. [Obtén más información sobre la métrica Tiempo hasta el primer byte](https://developer.chrome.com/docs/lighthouse/performance/time-to-first-byte/).
+
+{
+  "ahorro total en millones": 0,
+  "elementos": [
+    {
+      "url": "https://calidad-software-wine.vercel.app/evaluacion",
+      "tiempo de respuesta": 1
+    }
+  ],
+  "tipo": "oportunidad",
+  "encabezados": [
+    {
+      "etiqueta": "URL",
+      "clave": "url",
+      "tipoValor": "URL"
+    },
+    {
+      "etiqueta": "Tiempo invertido",
+      "valueType": "timespanMs",
+      "clave": "tiempo de respuesta"
+    }
+  ]
+}
+Evite las redirecciones a varias páginas
+
+100%
+Las redirecciones introducen retrasos adicionales antes de que se pueda cargar la página. [Aprende cómo evitar las redirecciones de página](https://developer.chrome.com/docs/lighthouse/performance/redirects/).
+
+{
+  "tipo": "oportunidad",
+  "ahorro total en millones": 0,
+  "encabezados": [],
+  "elementos": []
+}
+Árbol de dependencia de red
+
+0%
+[Evite encadenar solicitudes críticas](https://developer.chrome.com/docs/performance/insights/network-dependency-tree) reduciendo la longitud de las cadenas, reduciendo el tamaño de descarga de los recursos o aplazando la descarga de recursos innecesarios para mejorar la carga de la página.
+
+{
+  "tipo": "lista",
+  "elementos": [
+    {
+      "tipo": "sección-de-lista",
+      "valor": {
+        "tipo": "árbol de red",
+        "cadenas": {
+          "B909E289FE2547D9686C1B585DA503D2": {
+            "niños": {
+              "52.3": {
+                "tamaño de transferencia": 7940,
+                "navStartToEndTime": 186,
+                "url": "https://calidad-software-wine.vercel.app/assets/index-DXyB7u4g.css",
+                "niños": {}
+              },
+              "52.2": {
+                "tamaño de transferencia": 322626,
+                "niños": {
+                  "52.6": {
+                    "url": "https://vjpbbscwvdxcncfxmexx.supabase.co/rest/v1/metricas?select=*",
+                    "niños": {},
+                    "isLongest": verdadero,
+                    "tamaño de transferencia": 1832,
+                    "navStartToEndTime": 868
+                  }
+                },
+                "navStartToEndTime": 258,
+                "url": "https://calidad-software-wine.vercel.app/assets/index-C_fcXm-m.js",
+                "esMásLargo": verdadero
+              }
+            },
+            "isLongest": verdadero,
+            "tamaño de transferencia": 971,
+            "url": "https://calidad-software-wine.vercel.app/evaluacion",
+            "navStartToEndTime": 99
+          }
+        },
+        "cadenamáslarga": {
+          "duración": 868
+        }
+      }
+    },
+    {
+      "tipo": "sección-de-lista",
+      "title": "Orígenes preconectados",
+      "description": "Las sugerencias de [preconexión](https://developer.chrome.com/docs/lighthouse/performance/uses-rel-preconnect/) ayudan al navegador a establecer una conexión antes en la carga de la página, ahorrando tiempo al realizar la primera solicitud a ese origen. Los siguientes son los orígenes a los que la página se preconectó.",
+      "valor": {
+        "tipo": "texto",
+        "valor": "no se preconizaron orígenes"
+      }
+    },
+    {
+      "description": "Agregue sugerencias de [preconexión](https://developer.chrome.com/docs/lighthouse/performance/uses-rel-preconnect/) a sus orígenes más importantes, pero intente no usar más de 4.",
+      "tipo": "sección-de-lista",
+      "title": "Candidatos preconectados",
+      "valor": {
+        "encabezados": [
+          {
+            "valueType": "text",
+            "etiqueta": "Origen",
+            "clave": "origen"
+          },
+          {
+            "clave": "desperdiciadoMs",
+            "valueType": "ms",
+            "etiqueta": "Ahorro estimado de LCP"
+          }
+        ],
+        "tipo": "tabla",
+        "elementos": [
+          {
+            "origen": "https://vjpbbscwvdxcncfxmexx.supabase.co",
+            "desperdiciadosMs": 80
+          }
+        ]
+      }
+    }
+  ]
+}
+Solicitudes de bloqueo de renderizado
+
+50%
+Las solicitudes están bloqueando la renderización inicial de la página, lo que puede retrasar LCP. [Aplazar o insertar en línea](https://developer.chrome.com/docs/performance/insights/render-blocking) puede mover estas solicitudes de red fuera de la ruta crítica.
+
+{
+  "tipo": "tabla",
+  "encabezados": [
+    {
+      "valueType": "url",
+      "clave": "url",
+      "etiqueta": "URL"
+    },
+    {
+      "etiqueta": "Tamaño de transferencia",
+      "valueType": "bytes",
+      "clave": "totalBytes"
+    },
+    {
+      "etiqueta": "Duración",
+      "valueType": "timespanMs",
+      "clave": "desperdiciadosMs"
+    }
+  ],
+  "elementos": [
+    {
+      "url": "https://calidad-software-wine.vercel.app/assets/index-DXyB7u4g.css",
+      "totalBytes": 7940
+    }
+  ]
+}
+Minificar JavaScript
+
+100%
+La minificación de archivos JavaScript puede reducir el tamaño de la carga útil y el tiempo de análisis del script. [Aprenda cómo minificar JavaScript](https://developer.chrome.com/docs/lighthouse/performance/unminified-javascript/).
+
+{
+  "elementos": [],
+  "encabezados": [],
+  "datos de depuración": {
+    "Ahorros métricos": {
+      "FCP": 0,
+      "LCP": 0
+    },
+    "tipo": "datos de depuración"
+  },
+  "tipo": "oportunidad",
+  "ahorro total en millones": 0,
+  "ordenadoPor": [
+    "bytes desperdiciados"
+  ],
+  "Ahorro total en bytes": 0
+}
+Evite grandes cambios de diseño
+
+0%
+Se encontró 1 cambio de diseño
+
+Estos son los cambios de diseño más significativos observados en la página. Cada elemento de la tabla representa un cambio de diseño individual y muestra el elemento que más se desplazó. Debajo de cada elemento se indican las posibles causas que provocaron el cambio de diseño. Algunos de estos cambios de diseño podrían no estar incluidos en el valor de la métrica CLS debido al [efecto ventana](https://web.dev/articles/cls#what_is_cls). [Aprenda cómo mejorar CLS](https://web.dev/articles/optimize-cls)
+
+{
+  "tipo": "tabla",
+  "elementos": [
+    {
+      "puntuación": 0.3325125508008606,
+      "nodo": {
+        "nodeLabel": "Calidad Software\n\nPlataforma educativa para evaluar y mejorar la calidad de sof…",
+        "lhId": "page-2-FOOTER",
+        "tipo": "nodo",
+        "rectángulo delimitador": {
+          "arriba": 3309,
+          "fondo": 3583,
+          "ancho": 1335,
+          "izquierda": 0,
+          "altura": 274,
+          "derecha": 1335
+        },
+        "ruta": "1,HTML,1,BODY,0,DIV,0,DIV,2,PIE DE PÁGINA",
+        "fragmento": "<footer class=\"bg-gray-50 py-10 mt-12 border-t\">",
+        "selector": "body > div#root > div.flex > footer.bg-gray-50"
+      }
+    }
+  ],
+  "encabezados": [
+    {
+      "clave": "nodo",
+      "valueType": "node",
+      "etiqueta": "Elemento",
+      "subItemsHeading": {
+        "clave": "extra"
+      }
+    },
+    {
+      "subItemsHeading": {
+        "valueType": "text",
+        "clave": "causa"
+      },
+      "granularidad": 0,001,
+      "valueType": "numeric",
+      "clave": "puntuación",
+      "etiqueta": "Puntuación de desplazamiento de diseño"
+    }
+  ]
+}
+Reducir el CSS no utilizado
+
+100%
+Reduce las reglas no utilizadas de las hojas de estilo y pospón la carga del CSS que no se utilice para el contenido visible en la primera pantalla para disminuir el consumo de datos de la red. [Aprende cómo reducir el CSS no utilizado](https://developer.chrome.com/docs/lighthouse/performance/unused-css-rules/).
+
+{
+  "bytes de ahorro total": 0,
+  "ordenadoPor": [
+    "bytes desperdiciados"
+  ],
+  "datos de depuración": {
+    "tipo": "datos de depuración",
+    "Ahorros métricos": {
+      "FCP": 0,
+      "LCP": 0
+    }
+  },
+  "elementos": [],
+  "tipo": "oportunidad",
+  "encabezados": [],
+  "Ahorro total en millones": 0
+}
+Culpables del cambio de diseño
+
+0%
+Los cambios de diseño se producen cuando los elementos se mueven sin interacción del usuario. [Investiga las causas de los cambios de diseño](https://developer.chrome.com/docs/performance/insights/cls-culprit), como la adición o eliminación de elementos, o el cambio de sus fuentes durante la carga de la página.
+
+{
+  "elementos": [
+    {
+      "elementos": [
+        {
+          "nodo": {
+            "tipo": "texto",
+            "valor": "Total"
+          },
+          "puntuación": 0.3325125508008606
+        },
+        {
+          "puntuación": 0.3325125508008606,
+          "nodo": {
+            "lhId": "page-2-FOOTER",
+            "ruta": "1,HTML,1,BODY,0,DIV,0,DIV,2,PIE DE PÁGINA",
+            "tipo": "nodo",
+            "nodeLabel": "Calidad Software\n\nPlataforma educativa para evaluar y mejorar la calidad de sof…",
+            "selector": "body > div#root > div.flex > footer.bg-gray-50",
+            "fragmento": "<footer class=\"bg-gray-50 py-10 mt-12 border-t\">",
+            "rectángulo delimitador": {
+              "altura": 274,
+              "fondo": 3583,
+              "ancho": 1335,
+              "izquierda": 0,
+              "arriba": 3309,
+              "derecha": 1335
+            }
+          }
+        }
+      ],
+      "tipo": "tabla",
+      "encabezados": [
+        {
+          "etiqueta": "Elemento",
+          "subItemsHeading": {
+            "clave": "extra"
+          },
+          "valueType": "node",
+          "clave": "nodo"
+        },
+        {
+          "clave": "puntuación",
+          "valueType": "numeric",
+          "etiqueta": "Puntuación de desplazamiento de diseño",
+          "granularidad": 0,001,
+          "subItemsHeading": {
+            "clave": "causa",
+            "valueType": "texto"
+          }
+        }
+      ]
+    }
+  ],
+  "tipo": "lista"
+}
+Cambio de diseño acumulativo
+
+34%
+0.333
+
+El desplazamiento acumulativo del diseño mide el movimiento de los elementos visibles dentro del área de visualización. [Obtenga más información sobre la métrica de desplazamiento acumulativo del diseño](https://web.dev/articles/cls).
+
+{
+  "tipo": "datos de depuración",
+  "elementos": [
+    {
+      "cumulativeLayoutShiftMainFrame": 0.3325125508008606,
+      "newEngineResultDiffered": falso,
+      "newEngineResult": {
+        "cumulativeLayoutShift": 0.3325125508008606,
+        "cumulativeLayoutShiftMainFrame": 0.3325125508008606
+      }
+    }
+  ]
+}

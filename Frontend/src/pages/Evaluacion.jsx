@@ -1,3 +1,4 @@
+/* global process */
 import React, { useState, useEffect, useRef } from "react";
 import { Calculator, ArrowLeft, FileDown, CheckCircle, Shield, Lock, AlertTriangle, Info } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -41,8 +42,31 @@ const Evaluacion = () => {
 
   const pdfRef = useRef();
 
- 
-  const PAGESPEED_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+  // Variable para almacenar la API key
+  // Función para obtener la API key de PageSpeed de forma segura
+  function getPageSpeedApiKey() {
+    // Si está en test (Jest)
+    if (typeof process !== "undefined" && process.env && process.env.VITE_GOOGLE_API_KEY) {
+      return process.env.VITE_GOOGLE_API_KEY;
+    }
+    // Si está en navegador con Vite
+    if (typeof import.meta !== "undefined" && import.meta.env) {
+      return import.meta.env.VITE_GOOGLE_API_KEY || '';
+    }
+    // Si no se encuentra en ningún entorno
+    return '';
+  }
+
+  const [pageSpeedApiKey, setPageSpeedApiKey] = useState('');
+
+  // Efecto para obtener la API key de manera segura
+  useEffect(() => {
+    const viteKey = getPageSpeedApiKey();
+    if (!viteKey) {
+      console.warn("No se encontró la clave de API de PageSpeed");
+    }
+    setPageSpeedApiKey(viteKey);
+  }, []);
 
 
   useEffect(() => {
@@ -73,7 +97,7 @@ const Evaluacion = () => {
       return;
     }
 
-    if (!PAGESPEED_API_KEY) {
+    if (!pageSpeedApiKey) {
       setApiError("Se requiere una API key de Google PageSpeed Insights. Por favor, configure la API key.");
       return;
     }
@@ -85,7 +109,7 @@ const Evaluacion = () => {
       const response = await fetch(
         `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(
           url
-        )}&key=${PAGESPEED_API_KEY}&category=performance&category=seo&category=accessibility&category=best-practices&category=pwa`
+        )}&key=${pageSpeedApiKey}&category=performance&category=seo&category=accessibility&category=best-practices&category=pwa`
       );
 
       const data = await response.json();
@@ -174,7 +198,7 @@ const generarPDF = async (resultados) => {
       doc.setFontSize(12);
       let yPos = 50;
      
-      const pageSpeedData = Object.entries(performanceMetrics.categories).map(([key, val]) => [
+      const pageSpeedData = Object.entries(performanceMetrics.categories).map(([_, val]) => [
         val.title,
         `${Math.round((val.score || 0) * 100)}%`
       ]);
@@ -354,7 +378,7 @@ const generarPDF = async (resultados) => {
         const response = await fetch(
           `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(
             url
-          )}&key=${PAGESPEED_API_KEY}&category=performance&category=seo&category=accessibility&category=best-practices&category=pwa`
+          )}&key=${pageSpeedApiKey}&category=performance&category=seo&category=accessibility&category=best-practices&category=pwa`
         );
 
         const data = await response.json();

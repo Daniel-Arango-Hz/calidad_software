@@ -6,8 +6,9 @@ import Conceptos from '../pages/Conceptos';
 describe('Página Conceptos', () => {
   test('renderiza el título o encabezado principal', () => {
     render(<Conceptos />);
+    // El título principal es "Conceptos Fundamentales de Calidad"
     expect(
-      screen.getByText(/conceptos/i)
+      screen.getByText(/Conceptos Fundamentales de Calidad/i)
     ).toBeInTheDocument();
   });
 

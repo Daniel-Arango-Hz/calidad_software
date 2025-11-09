@@ -6,6 +6,7 @@ import Home from '../pages/Home';
 describe('Home page', () => {
   test('título principal presente', () => {
     render(<Home />);
-    expect(screen.getByText(/Evalúa la Calidad de Software|Evalua la Calidad de Software/i)).toBeInTheDocument();
+    // El título principal real es "Mejora Continua y Excelencia en el Desarrollo"
+    expect(screen.getByText(/Mejora Continua y Excelencia en el Desarrollo/i)).toBeInTheDocument();
   });
 });
